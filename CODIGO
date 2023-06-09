@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API_Consult</title>
+</head>
+<body>
+     <h1>Consulta de IP e CEP</h1>
+
+  <h2>IP Atual:</h2>
+  <p id="ip"></p>
+
+  <h2>Consulta de CEP:</h2>
+  <input type="text" id="cep-input" placeholder="Digite um CEP">
+  <button onclick="consultarCEP()">Consultar</button>
+
+  <h3>Resultado:</h3>
+  <p id="logradouro"></p>
+  <p id="complemento"></p>
+  <p id="bairro"></p>
+  <p id="localidade"></p>
+  <p id="uf"></p>
+  <p id="ddd"></p>
+
+  <script>
+    // Função para obter o IP atual
+    function obterIP() {
+      fetch('https://api.ipify.org/?format=json')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('ip').textContent = data.ip;
+        })
+        .catch(error => {
+          console.log('Erro ao obter o IP:', error);
+        });
+    }
+
+    // Função para consultar um CEP
+    function consultarCEP() {
+      var cep = document.getElementById('cep-input').value;
+      if (cep.length !== 8) {
+        alert('CEP inválido');
+        return;
+      }
+
+      fetch('https://viacep.com.br/ws/' + cep + '/json/')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('logradouro').textContent = 'Logradouro: ' + data.logradouro;
+          document.getElementById('complemento').textContent = 'Complemento: ' + data.complemento;
+          document.getElementById('bairro').textContent = 'Bairro: ' + data.bairro;
+          document.getElementById('localidade').textContent = 'Localidade: ' + data.localidade;
+          document.getElementById('uf').textContent = 'UF: ' + data.uf;
+          document.getElementById('ddd').textContent = 'DDD: ' + data.ddd;
+        })
+        .catch(error => {
+          console.log('Erro ao consultar o CEP:', error);
+        });
+    }
+
+    // Chama a função para obter o IP atual ao carregar a página
+    obterIP();
+  </script>
+</body>
+</html>
